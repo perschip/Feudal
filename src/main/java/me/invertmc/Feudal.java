@@ -32,6 +32,10 @@ public class Feudal extends JavaPlugin {
 	}
 	
 	
+	public void registerCommands() {
+		
+	}
+	
 	public static Feudal getInstance() {
 		return instance;
 	}
