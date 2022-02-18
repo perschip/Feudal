@@ -1,0 +1,15 @@
+name: Feudal
+version: '3.0.0-ALPHA'
+main: me.invertmc.feudal.Feudal
+api-version: 1.18
+prefix: Feudal
+authors: [ InvertMC ]
+description: Faction based plugin for minecraft
+website: https://www.minefaze.net
+commands:
+  feudal:
+    description: Base Command For Feudal
+    aliases:
+      - f
+      - kingdom
+
