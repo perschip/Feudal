@@ -12,11 +12,13 @@ import net.md_5.bungee.api.ChatColor;
 public class Feudal extends JavaPlugin {
 	
 	  public static Feudal instance;
-	   public Messages messagescfg;
+	  public Messages messagescfg;
+
 	  PluginDescriptionFile pdf = this.getDescription();
 
 	   public void onEnable() {
 	      this.instance = this;
+
 	      this.getLogger().info(ChatColor.GREEN + "=======================");
 	      this.getLogger().info(ChatColor.GREEN + "Feudal Has Been Enabled!");
 	      this.getLogger().info(ChatColor.GREEN + "Verison: " + this.pdf.getVersion());

@@ -43,5 +43,10 @@
             <version>1.7</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.Obliviated</groupId>
+            <artifactId>BlokSQLiteAPI</artifactId>
+            <version>1.0.7-b</version>
+        </dependency>
     </dependencies>
 </project>
