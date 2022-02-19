@@ -17,12 +17,12 @@ public class Feudal extends JavaPlugin {
 
 	   public void onEnable() {
 	      this.instance = this;
-	      this.getLogger().info("=======================");
-	      this.getLogger().info("Feudal Has Been Enabled!");
-	      this.getLogger().info("Verison: " + this.pdf.getVersion());
+	      this.getLogger().info(ChatColor.GREEN + "=======================");
+	      this.getLogger().info(ChatColor.GREEN + "Feudal Has Been Enabled!");
+	      this.getLogger().info(ChatColor.GREEN + "Verison: " + this.pdf.getVersion());
 	      this.createConfig();
 	      this.loadConfigManager();
-	      this.getLogger().info("=======================");
+	      this.getLogger().info(ChatColor.GREEN + "=======================");
 	      this.getCommand("feudal").setExecutor(new CommandManager());
 	   }
 
