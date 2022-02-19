@@ -27,6 +27,10 @@ public class Feudal extends JavaPlugin {
 	   }
 
 	   public void onDisable() {
+		   this.getLogger().info(ChatColor.RED + "=======================");
+		   this.getLogger().info(ChatColor.RED + "Feudal Has Been Enabled!");
+		   this.getLogger().info(ChatColor.RED + "Verison: " + this.pdf.getVersion());
+		   this.getLogger().info(ChatColor.RED + "=======================");
 	   }
 
 	   private void createConfig() {
