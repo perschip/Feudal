@@ -2,6 +2,7 @@ package me.invertmc.configs;
 
 import me.invertmc.Feudal;
 import me.invertmc.sql.SQLControl;
+import me.invertmc.utils.ErrorManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,16 +12,16 @@ public class Configs {
     /**
      * Loads configs
      */
-    public static boolean CreateConfigs() throws Exception {
+    public static boolean CreateConfigs() throws Exception{
         boolean success = true;
 
         Feudal.log("Loading configs...");
 
-        Feudal.setPluginFolder(Feudal.getPlugin(Feudal.class).getDataFolder());
+        Feudal.setPluginFolder(Feudal.getPlugin().getDataFolder());
         if (!Feudal.getPluginFolder().exists()) {
-            try {
+            try{
                 Feudal.getPluginFolder().mkdirs();
-            } catch (Exception e) {
+            }catch(Exception e){
                 success = false;
 
                 Feudal.error("Failed to create main plugin folder.  All config loading and/or creating has been canceled.");
@@ -30,9 +31,9 @@ public class Configs {
 
         Feudal.setDataFolderFeudal(new File(Feudal.getPluginFolder().getAbsolutePath() + "/DATA"));
         if (!Feudal.getDataFolderFeudal().exists()) {
-            try {
+            try{
                 Feudal.getDataFolderFeudal().mkdirs();
-            } catch (Exception e) {
+            }catch(Exception e){
                 success = false;
 
                 Feudal.error("Failed to create data folder.  All config loading and/or creating has been canceled.");
@@ -41,23 +42,23 @@ public class Configs {
         }
 
 
-        if (MainConfig.config()) {
+        if(MainConfig.config()){
 
             Feudal.log("\u00a7aMain config successfully loaded!");
-        } else {
+        }else{
 
             Feudal.warn("Main config had problems while loading.");
             success = false;
         }
 
-        /*if(CommandConfig.config()){
+        if(CommandConfig.config()){
             Feudal.log("\u00a7aCommand config successfully loaded!");
         }else{
             Feudal.warn("Command config had problems while loading.");
             success = false;
         }
 
-       /* if(Language.language()){
+        if(Language.language()){
 
             Feudal.log("\u00a7aLanguage config successfully loaded!");
         }else{
@@ -66,16 +67,16 @@ public class Configs {
             success = false;
         }
 
-        /*if(Market.marketConfig()){
+        if(Market.marketConfig()){
 
             Feudal.log("\u00a7aMarket config successfully loaded!");
         }else{
 
             Feudal.warn("Market config had problems while loading.");
             success = false;
-        }*/
+        }
 
-       /* if(challengesConfig()){
+        if(challengesConfig()){
 
             Feudal.log("\u00a7aChallenges config successfully loaded!");
         }else{
@@ -84,16 +85,16 @@ public class Configs {
             success = false;
         }
 
-       /* if(MarketData.marketData()){
+        if(MarketData.marketData()){
 
             Feudal.log("\u00a7aMarket data file successfully loaded!");
         }else{
 
             Feudal.warn("Market data file had problems while loading.");
             success = false;
-        }*/
+        }
 
-       /* if(playerData()){
+        if(playerData()){
 
             Feudal.log("\u00a7aPlayer data successfully loaded!");
         }else{
@@ -127,7 +128,7 @@ public class Configs {
 			success = false;
 		}*/
 
-        /*if(kingdomsFolder()){
+        if(kingdomsFolder()){
 
             Feudal.log("\u00a7aKingdoms folder and configs successfully loaded!");
         }else{
@@ -136,9 +137,9 @@ public class Configs {
             success = false;
         }
 
-        Feudal.getPlugin(Feudal.class).setSQL(new SQLControl());
+        Feudal.getPlugin().setSQL(new SQLControl());
         if(Feudal.getConfiguration().getConfig().getBoolean("sql.enable")) {
-            if(Feudal.getPlugin(Feudal.class).doesUseSql()) {
+            if(Feudal.getPlugin().doesUseSql()) {
                 Feudal.log("\u00a7aSQL successfully loaded!");
             }else {
                 Feudal.warn("There was a problem while loading the SQL.");
@@ -149,7 +150,7 @@ public class Configs {
         return success;
     }
 
-    /*private static boolean challengesConfig() throws Exception{
+    private static boolean challengesConfig() throws Exception{
         boolean load = true;
         Feudal.setChallengesConfig(new Configuration(new File(Feudal.getDataFolderFeudal(), "challenges.yml")));
         try {
@@ -228,7 +229,7 @@ public class Configs {
 
         return load;
     }
-*/
+
 	/*private static boolean ncpFolder() {
 		boolean load = true;
 		Main.setNcpFolder(new File(Main.getPluginFolder().getAbsolutePath() + "/NCPs"));
@@ -263,7 +264,7 @@ public class Configs {
 		return load;
 	}*/
 
-    /*public static boolean playerFolder() throws Exception{
+    public static boolean playerFolder() throws Exception{
         boolean load = true;
         Feudal.setPlayerFolder(new File(Feudal.getPluginFolder().getAbsolutePath() + "/players"));
         if (!Feudal.getPlayerFolder().exists()) {
@@ -378,9 +379,7 @@ public class Configs {
         Feudal.getProfessionData().getConfig().set("preSchedule", System.currentTimeMillis() - 3600000);
     }
 
-     */
-
-    /*public static boolean reload() {
+    public static boolean reload() {
         boolean ret = true;
         try{
             if(MainConfig.config()){
@@ -433,7 +432,7 @@ public class Configs {
             ret = false;
             ErrorManager.error(28, e);
         }
-        return ret;*/
-        return false;
+
+        return ret;
     }
 }

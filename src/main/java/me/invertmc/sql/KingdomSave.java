@@ -2,6 +2,7 @@ package me.invertmc.sql;
 
 import me.invertmc.Feudal;
 import me.invertmc.kingdoms.Kingdom;
+import me.invertmc.kingdoms.Land;
 import me.invertmc.kingdoms.Rank;
 import me.invertmc.utils.ErrorManager;
 
@@ -251,7 +252,7 @@ public class KingdomSave {
 						Double.valueOf((kingdom.getHome() != null ? kingdom.getHome().getY() : 0)),
 						Double.valueOf((kingdom.getHome() != null ? kingdom.getHome().getZ() : 0)),
 						Double.valueOf((kingdom.getHome() != null ? kingdom.getHome().getYaw() : 0)),
-						Double.valueOf((kingdom.getHome() != null ? kingdom.getHome().getPitch() : 0)),
+						Double.valueOf((kingdom.getHome() != null ? kingdom.getHome().getPitch() : 0))
 						);
 				
 				sql.getMembersSQL().remove("kingdom_uuid", kingdom.getUUID());
