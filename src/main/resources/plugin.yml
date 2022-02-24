@@ -1,10 +1,10 @@
 name: Feudal
 version: '3.0.0-ALPHA'
 main: me.invertmc.Feudal
-api-version: 1.18
+api-version: 1.13
 prefix: Feudal
 authors: [ InvertMC ]
-description: A RPG feudal game including social classes and jobs. Players can create kingdoms, claim land, make enemies, conquer land, join with allies, survive, live, and thrive.
+description: [A RPG feudal game including social classes and jobs. Players can create kingdoms, claim land, make enemies, conquer land, join with allies, survive, live, and thrive.]
 website: https://www.minefaze.net
 commands:
   feudal:
