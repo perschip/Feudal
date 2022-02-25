@@ -3,7 +3,10 @@ package me.invertmc.user;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cryptomorin.xseries.XMaterial;
 import me.invertmc.Feudal;
+import me.invertmc.kingdoms.Kingdom;
+import me.invertmc.user.classes.Profession;
 import me.invertmc.utils.InventoryGui;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -82,13 +85,13 @@ public class ChangeProfession {
             }
         }
         if(max){
-            if(playerEdit.getProfession().getType() == Type.SQUIRE){
+            if(playerEdit.getProfession().getType() == Profession.Type.SQUIRE){
                 squire = true;
-            }else if(playerEdit.getProfession().getType() == Type.KNIGHT){
+            }else if(playerEdit.getProfession().getType() == Profession.Type.KNIGHT){
                 knight = true;
-            }else if(playerEdit.getProfession().getType() == Type.BARON){
+            }else if(playerEdit.getProfession().getType() == Profession.Type.BARON){
                 baron = true;
-            }else if(playerEdit.getProfession().getType() == Type.KING){
+            }else if(playerEdit.getProfession().getType() == Profession.Type.KING){
                 king = true;
             }
             if(isPeasant(playerEdit.getProfession().getType())){
@@ -101,27 +104,27 @@ public class ChangeProfession {
         completePeasant = (completePeasant / 9) * 100; //9 is peasant total
         completeCommoner = (completeCommoner / 6) * 100; //6 is peasant total
 
-        final boolean FARMER = Profession.checkProfession(Type.FARMER);
-        final boolean LOGGER = Profession.checkProfession(Type.LOGGER);
-        final boolean HUNTER = Profession.checkProfession(Type.HUNTER);
-        final boolean MINER = Profession.checkProfession(Type.MINER);
-        final boolean COOK = Profession.checkProfession(Type.COOK);
-        final boolean FISHER = Profession.checkProfession(Type.FISHER);
-        final boolean BUILDER = Profession.checkProfession(Type.BUILDER);
-        final boolean SHEPHERD = Profession.checkProfession(Type.SHEPHERD);
-        final boolean SCRIBE = Profession.checkProfession(Type.SCRIBE);
+        final boolean FARMER = Profession.checkProfession(Profession.Type.FARMER);
+        final boolean LOGGER = Profession.checkProfession(Profession.Type.LOGGER);
+        final boolean HUNTER = Profession.checkProfession(Profession.Type.HUNTER);
+        final boolean MINER = Profession.checkProfession(Profession.Type.MINER);
+        final boolean COOK = Profession.checkProfession(Profession.Type.COOK);
+        final boolean FISHER = Profession.checkProfession(Profession.Type.FISHER);
+        final boolean BUILDER = Profession.checkProfession(Profession.Type.BUILDER);
+        final boolean SHEPHERD = Profession.checkProfession(Profession.Type.SHEPHERD);
+        final boolean SCRIBE = Profession.checkProfession(Profession.Type.SCRIBE);
 
-        final boolean GUARD = Profession.checkProfession(Type.GUARD);
-        final boolean ASSASSIN = Profession.checkProfession(Type.ASSASSIN);
-        final boolean ALCHEMIST = Profession.checkProfession(Type.ALCHEMIST);
-        final boolean BLACKSMITH = Profession.checkProfession(Type.BLACKSMITH);
-        final boolean HEALER = Profession.checkProfession(Type.HEALER);
-        final boolean MERCHANT = Profession.checkProfession(Type.MERCHANT);
+        final boolean GUARD = Profession.checkProfession(Profession.Type.GUARD);
+        final boolean ASSASSIN = Profession.checkProfession(Profession.Type.ASSASSIN);
+        final boolean ALCHEMIST = Profession.checkProfession(Profession.Type.ALCHEMIST);
+        final boolean BLACKSMITH = Profession.checkProfession(Profession.Type.BLACKSMITH);
+        final boolean HEALER = Profession.checkProfession(Profession.Type.HEALER);
+        final boolean MERCHANT = Profession.checkProfession(Profession.Type.MERCHANT);
 
-        final boolean SQUIRE = Profession.checkProfession(Type.SQUIRE);
-        final boolean KNIGHT = Profession.checkProfession(Type.KNIGHT);
-        final boolean BARON = Profession.checkProfession(Type.BARON);
-        final boolean KING = Profession.checkProfession(Type.KING);
+        final boolean SQUIRE = Profession.checkProfession(Profession.Type.SQUIRE);
+        final boolean KNIGHT = Profession.checkProfession(Profession.Type.KNIGHT);
+        final boolean BARON = Profession.checkProfession(Profession.Type.BARON);
+        final boolean KING = Profession.checkProfession(Profession.Type.KING);
 
 
         final String strength = Feudal.getMessage("changeProfession.Strength");
@@ -311,7 +314,7 @@ public class ChangeProfession {
         }
     }
 
-    private boolean isCommoner(Type type) {
+    private boolean isCommoner(Profession.Type type) {
         if(type.equals(Profession.Type.GUARD) || type.equals(Profession.Type.ASSASSIN) || type.equals(Profession.Type.ALCHEMIST) || type.equals(Profession.Type.BLACKSMITH) || type.equals(Profession.Type.HEALER) || type.equals(Profession.Type.MERCHANT)){
             return true;
         }else{
@@ -319,7 +322,7 @@ public class ChangeProfession {
         }
     }
 
-    private boolean isPeasant(Type type) {
+    private boolean isPeasant(Profession.Type type) {
         if(type.equals(Profession.Type.FARMER) || type.equals(Profession.Type.LOGGER) || type.equals(Profession.Type.HUNTER) || type.equals(Profession.Type.MINER) ||
                 type.equals(Profession.Type.COOK) || type.equals(Profession.Type.FISHER) || type.equals(Profession.Type.BUILDER) || type.equals(Profession.Type.SHEPHERD) || type.equals(Profession.Type.SCRIBE)){
             return true;

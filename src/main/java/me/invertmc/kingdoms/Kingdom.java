@@ -8,9 +8,15 @@ import java.util.List;
 import java.util.UUID;
 
 import me.invertmc.Feudal;
+import me.invertmc.api.events.KingdomDeleteEvent;
 import me.invertmc.sql.KingdomSave;
+import me.invertmc.sql.SQLControl;
 import me.invertmc.user.User;
+import me.invertmc.user.classes.Profession;
+import me.invertmc.user.classes.XP;
+import me.invertmc.utils.ErrorManager;
 import me.invertmc.utils.OnlineTime;
+import me.invertmc.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
@@ -183,30 +189,6 @@ public class Kingdom implements Comparable<Kingdom> {
                     }
                     home = new Location(Bukkit.getWorld(homeWorld), config.getConfig().getDouble("home.x"), config.getConfig().getDouble("home.y"), config.getConfig().getDouble("home.z"), (float) config.getConfig().getDouble("home.yaw"), (float)config.getConfig().getDouble("home.pitch"));
                 }
-                if(config.getConfig().getString("bannerBackground") != null && !config.getConfig().getString("bannerBackground").equals("")){
-                    try{
-                        bannerBaseColor = DyeColor.valueOf(config.getConfig().getString("bannerBackground"));
-                    }catch(Exception e){
-                        bannerBaseColor = DyeColor.WHITE;
-                    }
-                }else{
-                    bannerBaseColor = DyeColor.WHITE;
-                }
-                if(!Feudal.getVersion().equals("1.7")) {
-                    banner = new BannerPattern();
-                    for(String str : config.getConfig().getStringList("banner")){
-                        try{
-                            String split[] = str.split("/");
-                            if(split.length == 2){
-                                banner.add(split[0], split[1]);
-                            }
-                        }catch(Exception e){
-                            ErrorManager.error(83, e);
-
-                            Feudal.error("Failed to load banner pattern for kingdom: " + name + "[" + uuid + "]");
-                        }
-                    }
-                }
 
                 updateLand();
 
@@ -227,7 +209,7 @@ public class Kingdom implements Comparable<Kingdom> {
 
     /**
      * Load kingdom from config
-     * @param config
+     *
      * @throws Exception
      */
     public Kingdom(ResultSet set) throws Exception{
@@ -264,32 +246,6 @@ public class Kingdom implements Comparable<Kingdom> {
                         set.getDouble("homeZ"),
                         (float) set.getDouble("homeYaw"),
                         (float) set.getDouble("homePitch"));
-            }
-            if(!set.getString("bannerBackground").equals("")){
-                try{
-                    bannerBaseColor = DyeColor.valueOf(set.getString("bannerBackground"));
-                }catch(Exception e){
-                    bannerBaseColor = DyeColor.WHITE;
-                }
-            }else{
-                bannerBaseColor = DyeColor.WHITE;
-            }
-            if(!Feudal.getVersion().equals("1.7")) {
-                banner = new BannerPattern();
-                if(set.getString("banner").contains("~")) {
-                    for(String str : set.getString("banner").split("~")){
-                        try{
-                            String split[] = str.split("/");
-                            if(split.length == 2){
-                                banner.add(split[0], split[1]);
-                            }
-                        }catch(Exception e){
-                            ErrorManager.error(83, e);
-
-                            Feudal.error("Failed to load banner pattern for kingdom: " + name + "[" + uuid + "]");
-                        }
-                    }
-                }
             }
 
             SQLControl sql = Feudal.getPlugin().getSql();
@@ -450,11 +406,6 @@ public class Kingdom implements Comparable<Kingdom> {
             config.getConfig().set("home.pitch", home.getPitch());
         }else{
             config.getConfig().set("home.active", false);
-        }
-
-        config.getConfig().set("bannerBackground", bannerBaseColor.toString());
-        if(!Feudal.getVersion().equals("1.7") && banner != null) {
-            config.getConfig().set("banner", banner.getBannerList());
         }
         config.save();
     }
@@ -1031,44 +982,6 @@ public class Kingdom implements Comparable<Kingdom> {
     }
 
     /**
-     * Get the banner dye color.
-     * @return
-     */
-    public DyeColor getBannerBaseColor() {
-        return this.bannerBaseColor;
-    }
-
-    /**
-     * Get the banner patterns
-     * @return
-     */
-    public BannerPattern getBannerPatterns() {
-        return this.banner;
-    }
-
-    /**
-     * Set banner color.
-     * @param baseColor
-     */
-    public void setBannerBaseColor(DyeColor baseColor) {
-        if(baseColor == null){
-            this.bannerBaseColor = Banner.randomBaseColor();
-        }else{
-            this.bannerBaseColor = baseColor;
-        }
-        change = true;
-    }
-
-    /**
-     * Set banner pattern
-     * @param patterns
-     */
-    public void setBannerPattern(BannerPattern patterns) {
-        this.banner = patterns;
-        change = true;
-    }
-
-    /**
      * Set kingdom name
      * @param string
      */
@@ -1445,7 +1358,7 @@ public class Kingdom implements Comparable<Kingdom> {
             if(members.get(m).equals(Rank.LEADER)){
                 User u = Feudal.getUser(m);
                 if(u != null){
-                    if(u.getProfession() != null && !u.getProfession().getType().equals(Type.NONE)){
+                    if(u.getProfession() != null && !u.getProfession().getType().equals(Profession.Type.NONE)){
                         incomeTax = (float) Feudal.getConfiguration().getConfig().getDouble(u.getProfession().getType().getName() + ".taxPercent");
                         landTaxPercent = (float) (Feudal.getConfiguration().getConfig().getDouble(u.getProfession().getType().getName() + ".rentPercent")/100);
                     }
@@ -1650,8 +1563,8 @@ public class Kingdom implements Comparable<Kingdom> {
         for(String s : members.keySet()){
             User u = Feudal.getUser(s);
             if(u != null){
-                if(u.getProfession() != null && !u.getProfession().getType().equals(Type.NONE)){
-                    if(u.getProfession().getType().equals(Type.SQUIRE) || u.getProfession().getType().equals(Type.KNIGHT) || u.getProfession().getType().equals(Type.BARON) || u.getProfession().getType().equals(Type.KING) || u.getProfession().getType().equals(Type.ARCHBISHOP)){
+                if(u.getProfession() != null && !u.getProfession().getType().equals(Profession.Type.NONE)){
+                    if(u.getProfession().getType().equals(Profession.Type.SQUIRE) || u.getProfession().getType().equals(Profession.Type.KNIGHT) || u.getProfession().getType().equals(Profession.Type.BARON) || u.getProfession().getType().equals(Profession.Type.KING) || u.getProfession().getType().equals(Profession.Type.ARCHBISHOP)){
                         xp = (int) (((double) xp) * Feudal.getConfiguration().getConfig().getDouble("kingdom.challenges.nobleWinXPMultiplier"));
                     }
                 }
@@ -1668,8 +1581,8 @@ public class Kingdom implements Comparable<Kingdom> {
         for(String s : members.keySet()){
             User u = Feudal.getUser(s);
             if(u != null){
-                if(u.getProfession() != null && !u.getProfession().getType().equals(Type.NONE)){
-                    Type t = u.getProfession().getType();
+                if(u.getProfession() != null && !u.getProfession().getType().equals(Profession.Type.NONE)){
+                    Profession.Type t = u.getProfession().getType();
                     if(members.get(s).equals(Rank.LEADER)){
                         if(!fighters.contains(s)){
                             fighters.add(s);

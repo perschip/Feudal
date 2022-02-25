@@ -14,16 +14,21 @@ import java.util.UUID;
 import com.cryptomorin.xseries.XMaterial;
 import me.invertmc.api.FeudalAPI;
 import me.invertmc.api.FeudalAPICore;
+import me.invertmc.command.Commands;
 import me.invertmc.configs.Configs;
 import me.invertmc.configs.Configuration;
-import me.invertmc.kingdoms.Kingdom;
-import me.invertmc.kingdoms.Land;
-import me.invertmc.kingdoms.Rank;
+import me.invertmc.kingdoms.*;
+import me.invertmc.managergui.InventoryGui2;
+import me.invertmc.market.Category;
 import me.invertmc.market.CheckForMarketErrors;
 import me.invertmc.market.ItemProtector;
+import me.invertmc.market.MarketItem;
+import me.invertmc.sql.KingdomSave;
 import me.invertmc.sql.SQLControl;
-import me.invertmc.user.Selection;
-import me.invertmc.user.User;
+import me.invertmc.sql.UserSave;
+import me.invertmc.user.*;
+import me.invertmc.user.attributes.Effect;
+import me.invertmc.user.classes.Profession;
 import me.invertmc.utils.ErrorManager;
 import me.invertmc.utils.VaultUtils;
 import me.invertmc.utils.WGUtils;
@@ -37,8 +42,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.invertmc.command.CommandManager;
-import me.invertmc.files.Messages;
 import net.md_5.bungee.api.ChatColor;
 
 public class Feudal extends JavaPlugin {
@@ -63,7 +66,7 @@ public class Feudal extends JavaPlugin {
 	private static HashMap<String, User> onlinePlayers = new HashMap<>(); // String
 	// =
 	// UUID
-	/*private volatile static ArrayList<Challenge> challenges = new ArrayList<>();
+	private volatile static ArrayList<Challenge> challenges = new ArrayList<>();
 	private static ArrayList<Configuration> kingdomConfigs = new ArrayList<>();
 	private static ArrayList<Configuration> ncpConfigs = new ArrayList<>();
 	private static ArrayList<Selection> selections = new ArrayList<>();
@@ -72,10 +75,10 @@ public class Feudal extends JavaPlugin {
 	private static ArrayList<MarketItem> marketItems = new ArrayList<>();
 	private static ArrayList<Category> categories = new ArrayList<>();
 	private static ArrayList<TrackPlayer> trackPlayers = new ArrayList<>();
-	private static ArrayList<Kingdom> kingdoms = new ArrayList<>();*/
+	private static ArrayList<Kingdom> kingdoms = new ArrayList<>();
 	private static int eco = 0;//0 none ; 1 vault ; 2 moltres
 	private static String minecraftVersion = "1.18";
-	//private static Commands commands;
+	private static Commands commands;
 
 	private static volatile List<String> saving = Collections.synchronizedList(new ArrayList<String>());
 
@@ -89,11 +92,10 @@ public class Feudal extends JavaPlugin {
 		plugin = this;
 		minecraftVersion = Bukkit.getVersion();
 
-		this.getLogger().info(ChatColor.GREEN + "=======================");
-		this.getLogger().info(ChatColor.GREEN + "Feudal Has Been Enabled!");
-		this.getLogger().info(ChatColor.GREEN + "Verison: " + this.pdf.getVersion());
-		this.getLogger().info(ChatColor.GREEN + "=======================");
-		this.getCommand("feudal").setExecutor(new CommandManager());
+		this.getLogger().info( "\u00a7e=======================");
+		this.getLogger().info("\u00a7eFeudal Has Been Enabled!");
+		this.getLogger().info( "\u00a7eVerison: " + this.pdf.getVersion());
+		this.getLogger().info("\u00a7e=======================");
 
 		try {
 			if (Configs.CreateConfigs()) {
@@ -206,12 +208,12 @@ public class Feudal extends JavaPlugin {
 
 			ScheduledTasks.startScheduler();
 
-			try {
+			/*try {
 				final Metrics metrics = new Metrics(this);
 				metrics.start();
 			} catch (final IOException e) {
 				ErrorManager.error(9, e);
-			}
+			}*/
 
 			InventoryGui2.enable(this);
 
@@ -256,7 +258,7 @@ public class Feudal extends JavaPlugin {
 			new CheckForMarketErrors();
 
 			if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-				new FeudalPlaceholder(this).hook();
+				//new FeudalPlaceholder(this).hook();
 				Feudal.log("Placeholders loaded for PlaceholderAPI");
 			}
 
@@ -297,7 +299,6 @@ public class Feudal extends JavaPlugin {
 		ScheduledTasks.startKingdomSaveTimer();
 
 		api = new FeudalAPICore();
-		Updates.checkUpdates(this, "Feudal", "22873");
 	}
 
 	public void onDisable() {
@@ -314,9 +315,9 @@ public class Feudal extends JavaPlugin {
 			for (final Selection sel : selections) {
 				sel.getPlayer().closeInventory();
 			}
-				for (final Market1_12 mar : markets1_12) {
+				/*for (final Market1_12 mar : markets1_12) {
 					mar.getPlayer().closeInventory();
-				}
+				}*/
 
 			for (final Player p : Bukkit.getOnlinePlayers()) {
 				p.closeInventory();
@@ -1068,24 +1069,6 @@ public class Feudal extends JavaPlugin {
 	}
 
 	/**
-	 * Get all open markets for mc version 1.9
-	 *
-	 * @return list of open 1.9 markets
-	 */
-	public static ArrayList<Market1_9> getMarkets() {
-		return markets;
-	}
-
-	/**
-	 * Get all open markets for mc version 1.8
-	 *
-	 * @return list of open 1.8 markets
-	 */
-	public static ArrayList<Market1_8> getMarketsOld() {
-		return marketsOld;
-	}
-
-	/**
 	 * Save all market items
 	 */
 	public static void saveMarketItems() {
@@ -1373,11 +1356,7 @@ public class Feudal extends JavaPlugin {
 	 */
 	@SuppressWarnings("deprecation")
 	public static ItemStack getItemInHand(Player p) {
-		if (!Feudal.getVersion().contains("1.8") && !Feudal.getVersion().contains("1.7")) {
-			return Utils1_9.getItemInHand(p.getInventory());
-		} else {
 			return p.getItemInHand();
-		}
 	}
 
 	/**
@@ -1388,11 +1367,7 @@ public class Feudal extends JavaPlugin {
 	 */
 	@SuppressWarnings("deprecation")
 	public static void setItemInHand(Player p, ItemStack item) {
-		if (!Feudal.getVersion().contains("1.8") && !Feudal.getVersion().contains("1.7")) {
-			Utils1_9.setItemInHand(p.getInventory(), item);
-		} else {
 			p.setItemInHand(item);
-		}
 	}
 
 	/**

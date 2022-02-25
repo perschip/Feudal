@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.invertmc.Feudal;
+import me.invertmc.api.events.UserCreateEvent;
+import me.invertmc.user.attributes.Attribute;
+import me.invertmc.user.attributes.Attributes;
 import me.invertmc.user.classes.Profession;
 import me.invertmc.utils.InventoryGui;
 import me.invertmc.utils.Utils;
@@ -1238,7 +1241,7 @@ public class Selection {
 
                         if(Feudal.getEco() == 1) {
                             final User user = Feudal.getUser(player.getUniqueId().toString());
-                            if(user == null || user.getProfession() == null || user.getProfession().getType().equals(Type.NONE)){
+                            if(user == null || user.getProfession() == null || user.getProfession().getType().equals(Profession.Type.NONE)){
                                 VaultUtils.removePermission(player, "feudal.character.setup");
                                 VaultUtils.addPermission(player, "feudal.character.notsetup");
                             }else {

@@ -5,6 +5,7 @@ import me.invertmc.Feudal;
 import me.invertmc.kingdoms.Kingdom;
 import me.invertmc.user.User;
 import me.invertmc.user.classes.Profession;
+import me.invertmc.utils.Utils;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -53,7 +54,7 @@ public class Extra {
                                 }else {
                                     hand = XMaterial.AIR.parseItem();
                                 }
-                                event.getClickedBlock().setData((byte) nextDur);
+                                //event.getClickedBlock().setData((byte) nextDur);
                                 Feudal.setItemInHand(event.getPlayer(), hand);
                             }
                         }
@@ -74,7 +75,7 @@ public class Extra {
                                 }else if(b == 7 || b == 11) {
                                     b = 3;
                                 }
-                                event.getClickedBlock().setData(b);
+                               // event.getClickedBlock().setData(b);
                             }
                         }
                     }

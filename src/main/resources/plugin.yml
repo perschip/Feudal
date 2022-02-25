@@ -6,10 +6,269 @@ prefix: Feudal
 authors: [ InvertMC ]
 description: [A RPG feudal game including social classes and jobs. Players can create kingdoms, claim land, make enemies, conquer land, join with allies, survive, live, and thrive.]
 website: https://www.minefaze.net
+softdepend: [Vault, WorldEdit, PlaceholderAPI]
 commands:
   feudal:
-    description: Base Command For Feudal
-    aliases:
-      - f
-      - kingdom
-
+    description: Primary feudal command
+    aliases: [f, k, kingdom]
+permissions:
+  feudal.*:
+    description: Gives access to all feudal features.
+    default: op
+    children:
+      feudal.admin: true
+  feudal.admin:
+    description: Gives access to all admin features.
+    children:
+      feudal.commands: true
+      feudal.admin.passProtection: true
+      feudal.admin.passAttributeFix: true
+  feudal.commands.admin:
+    description: Gives access to all admin commands.
+    children:
+      feudal.commands.admin.kingdoms.join: true
+      feudal.commands.admin.kingdoms.leader: true
+      feudal.commands.admin.kingdoms.name: true
+      feudal.commands.admin.market.sellanyprice: true
+      feudal.commands.admin.character.changeprofession: true
+      feudal.commands.admin.character.setprofessionlevel: true
+      feudal.commands.admin.character.setspeed: true
+      feudal.commands.admin.character.setstrength: true
+      feudal.commands.admin.character.settoughness: true
+      feudal.commands.admin.character.setstamina: true
+      feudal.commands.admin.character.setluck: true
+      feudal.commands.admin.character.resetcharacter: true
+      feudal.commands.admin.kingdoms.forcewin: true
+      feudal.commands.admin.character.setReputation: true
+      feudal.commands.admin.challenge: true
+      feudal.commands.admin.kingdomchat: true
+      feudal.commands.admin.reload: true
+      feudal.commands.admin.kingdomlog: true
+      feudal.commands.admin.unenchant: true
+  feudal.commands:
+    description: Gives access to all commands.
+    children:
+      feudal.commands.admin: true
+      feudal.commands.user: true
+  feudal.commands.user:
+    description: Gives access to user commands.
+    default: true
+    children:
+      feudal.commands.user.general: true
+      feudal.commands.user.kingdoms: true
+      feudal.commands.user.market: true
+      feudal.commands.user.character: true
+  feudal.commands.user.general:
+    description: Gives access to general user commands.
+    children:
+      feudal.commands.user.general.help: true
+      feudal.commands.user.general.tutorial: true
+      feudal.commands.user.general.spar: true
+  feudal.commands.user.kingdoms:
+    description: Gives access to kingdom user commands.
+    children:
+      feudal.commands.user.kingdoms.create: true
+      feudal.commands.user.kingdoms.join: true
+      feudal.commands.user.kingdoms.invite: true
+      feudal.commands.user.kingdoms.setopen: true
+      feudal.commands.user.kingdoms.delete: true
+      feudal.commands.user.kingdoms.leader: true
+      feudal.commands.user.kingdoms.leave: true
+      feudal.commands.user.kingdoms.enemy: true
+      feudal.commands.user.kingdoms.neutral: true
+      feudal.commands.user.kingdoms.ally: true
+      feudal.commands.user.kingdoms.kick: true
+      feudal.commands.user.kingdoms.claim: true
+      feudal.commands.user.kingdoms.unclaim: true
+      feudal.commands.user.kingdoms.sethome: true
+      feudal.commands.user.kingdoms.view: true
+      feudal.commands.user.kingdoms.info: true
+      feudal.commands.user.kingdoms.treasury: true
+      feudal.commands.user.kingdoms.description: true
+      feudal.commands.user.kingdoms.baninfo: true
+      feudal.commands.user.kingdoms.banner: true
+      feudal.commands.user.kingdoms.setbanner: true
+      feudal.commands.user.kingdoms.name: true
+      feudal.commands.user.kingdoms.challange: true
+      feudal.commands.user.kingdoms.online: true
+      feudal.commands.user.kingdoms.list: true
+      feudal.commands.user.kingdoms.promote: true
+      feudal.commands.user.kingdoms.demote: true
+      feudal.commands.user.kingdoms.home: true
+      feudal.commands.user.kingdoms.challenge: true
+      feudal.commands.user.kingdoms.chat: true
+      feudal.commands.user.kingdoms.fighter: true
+      feudal.commands.user.kingdoms.placechallenge: true
+      feudal.commands.user.kingdoms.findclaims: true
+      feudal.commands.user.kingdoms.manage: true
+  feudal.commands.user.market:
+    description: Gives access to market user commands.
+    children:
+      feudal.commands.user.market.sell: true
+  feudal.commands.user.market.sell:
+    description: Sell to the market
+  feudal.commands.user.character:
+    description: Gives access to character user commands.
+    children:
+      feudal.commands.user.character.character: true
+      feudal.commands.user.character.speed: true
+      feudal.commands.user.character.strength: true
+      feudal.commands.user.character.toughness: true
+      feudal.commands.user.character.stamina: true
+      feudal.commands.user.character.luck: true
+      feudal.commands.user.character.online: true
+      feudal.commands.user.character.profession: true
+      feudal.commands.user.character.changeprofession: true
+  feudal.commands.special.shield:
+    description: Permission to use shield and vacation commands.
+    children:
+      feudal.commands.special.shield.vacation: true
+      feudal.commands.special.shield.1: true
+      feudal.commands.special.shield.2: true
+      feudal.commands.special.shield.3: true
+  feudal.commands.user.general.help:
+    description: Help command
+  feudal.commands.user.general.tutorial:
+    description: Tutorial command
+  feudal.commands.user.kingdoms.create:
+    description: Create kingdom
+  feudal.commands.user.kingdoms.join:
+    description: Join kingdom
+  feudal.commands.user.kingdoms.invite:
+    description: Invite user
+  feudal.commands.user.kingdoms.setopen:
+    description: Set kingdom open
+  feudal.commands.admin.unenchant:
+    description: Unenchant an item
+  feudal.commands.user.kingdoms.delete:
+    description: Delete kingdom
+  feudal.commands.user.kingdoms.leader:
+    description: Change leaders
+  feudal.commands.user.kingdoms.leave:
+    description: Leave kingdom
+  feudal.commands.user.kingdoms.enemy:
+    description: Enemy kingdom
+  feudal.commands.user.kingdoms.neutral:
+    description: Neutral kingdom
+  feudal.commands.user.kingdoms.ally:
+    description: Ally kingdom
+  feudal.commands.user.kingdoms.findclaims:
+    description: Find your kingdom's claimed land
+  feudal.commands.user.kingdoms.home:
+    description: Go home to the home of your kingdom.
+  feudal.commands.user.kingdoms.kick:
+    description: Kick user from kingdom
+  feudal.commands.user.kingdoms.claim:
+    description: Claim land
+  feudal.commands.user.kingdoms.unclaim:
+    description: Unclaim land
+  feudal.commands.user.kingdoms.sethome:
+    description: Set home of kingdom.
+  feudal.commands.user.kingdoms.view:
+    description: View land around area
+  feudal.commands.user.kingdoms.info:
+    description: Info on kingdom
+  feudal.commands.user.kingdoms.treasury:
+    description: Access to treasury commands.
+  feudal.commands.user.kingdoms.description:
+    description: Set description for kingdom.
+  feudal.commands.user.kingdoms.baninfo:
+    description: Ban info command.
+  feudal.commands.user.kingdoms.banner:
+    description: Access to banner command.
+  feudal.commands.user.kingdoms.setbanner:
+    description: Set banner command.
+  feudal.commands.user.kingdoms.name:
+    description: Change kingdom name.
+  feudal.commands.user.kingdoms.challenge:
+    description: Challenge a kingdom.
+  feudal.commands.user.kingdoms.chat:
+    description: Toggle kingdom chat
+  feudal.commands.user.kingdoms.online:
+    description: Online command.
+  feudal.commands.user.kingdoms.promote:
+    description: Promote a kingdom member.
+  feudal.commands.user.kingdoms.demote:
+    description: Demote a kingdom member.
+  feudal.commands.user.kingdoms.list:
+    description: List all kingdoms.
+  feudal.commands.user.character.character:
+    description: View info on a character.
+  feudal.commands.user.character.speed:
+    description: View speed.
+  feudal.commands.user.character.strength:
+    description: View strength.
+  feudal.commands.user.character.toughness:
+    description: View toughness.
+  feudal.commands.user.character.stamina:
+    description: View stamina.
+  feudal.commands.user.character.luck:
+    description: View luck.
+  feudal.commands.user.character.online:
+    description: View online times.
+  feudal.commands.user.character.profession:
+    description: View profession.
+  feudal.commands.user.character.changeprofession:
+    description: Change profession.
+  feudal.commands.admin.kingdoms.join:
+    description: Force join a kingdom.
+  feudal.commands.admin.kingdoms.leader:
+    description: Change leader at any point.
+  feudal.commands.admin.kingdoms.delete:
+    description: Delete a kingdom.
+  feudal.commands.admin.kingdoms.name:
+    description: Rename a kingdom.
+  feudal.commands.admin.kingdoms.forcewin:
+    description: Force a kingdom to win in a challenge.
+  feudal.commands.admin.market.sellanyprice:
+    description: Sell things on the market at any price without having to be a merchant.
+  feudal.commands.admin.character.changeprofession:
+    description: Change a players profession.
+  feudal.commands.admin.character.setprofessionlevel:
+    description: Set players profession level
+  feudal.commands.admin.character.setspeed:
+    description: Set speed
+  feudal.commands.admin.character.setstrength:
+    description: Set strength
+  feudal.commands.admin.character.settoughness:
+    description: Set toughness
+  feudal.commands.admin.character.setstamina:
+    description: Set stamina
+  feudal.commands.admin.character.setluck:
+    description: Set luck
+  feudal.commands.admin.character.resetcharacter:
+    description: Reset a character.
+  feudal.commands.admin.character.setreputation:
+    description: Change a users reputation.
+  feudal.commands.admin.challenge:
+    description: View all current challenges.
+  feudal.commands.admin.kingdomchat:
+    description: View all players kingdom chats
+  feudal.commands.special.shield.vacation:
+    description: Have access to use a vacation shield.
+    default: true
+  feudal.commands.special.shield.1:
+    description: Have access to use a one week shield.
+  feudal.commands.special.shield.2:
+    description: Have access to use a two week shield.
+  feudal.commands.special.shield.3:
+    description: Have access to use a three week shield.
+  feudal.admin.passProtection:
+    description: Allows an admin to bypass the land protection.
+  feudal.commands.user.kingdoms.fighter:
+    description: Lets kingdom set who are the fighters.
+  feudal.commands.admin.reload:
+    description: Allowed to reload configs
+  feudal.commands.admin.kingdomlog:
+    description: View what kingdoms a player has been in.
+  feudal.commands.user.kingdoms.placechallenge:
+    description: Can place a challenge.
+  feudal.commands.user.general.spar:
+    description: Spar other players including their kingdom members
+  feudal.admin.passAttributeFix:
+    description: If attributes bypass the limit then you can maintain those levels
+  feudal.commands.user.redistributeAttributes:
+    description: Redistribute attribute levels.
+    default: op
+  feudal.commands.user.kingdoms.manage:
+    description: Open menu to manage your kingdom

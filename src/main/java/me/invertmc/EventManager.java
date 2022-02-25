@@ -4,13 +4,15 @@ import java.util.ArrayList;
 
 import com.cryptomorin.xseries.XBiome;
 import com.cryptomorin.xseries.XMaterial;
-import me.invertmc.kingdoms.BlockValidator;
-import me.invertmc.kingdoms.Kingdom;
-import me.invertmc.kingdoms.Land;
-import me.invertmc.kingdoms.Rank;
-import me.invertmc.user.Selection;
-import me.invertmc.user.TrackPlayer;
-import me.invertmc.user.User;
+import me.invertmc.kingdoms.*;
+import me.invertmc.market.ItemProtector;
+import me.invertmc.spar.Sparing;
+import me.invertmc.user.*;
+import me.invertmc.user.attributes.Effect;
+import me.invertmc.user.attributes.Luck;
+import me.invertmc.user.classes.Extra;
+import me.invertmc.user.classes.Profession;
+import me.invertmc.user.classes.XP;
 import me.invertmc.utils.ErrorManager;
 import me.invertmc.utils.Utils;
 import me.invertmc.utils.UtilsAbove1_7;
@@ -79,7 +81,7 @@ public class EventManager implements Listener{
             String rank = "";
             String rankSpace = "";
             final User u = Feudal.getUser(event.getPlayer().getUniqueId().toString());
-            if(u != null && u.getProfession() != null && !u.getProfession().getType().equals(Type.NONE)){
+            if(u != null && u.getProfession() != null && !u.getProfession().getType().equals(Profession.Type.NONE)){
                 profession = u.getProfession().getType().getNameLang();
                 if(!u.getKingdomUUID().equals("")){
                     final Kingdom k = Feudal.getKingdom(u.getKingdomUUID());
@@ -116,12 +118,12 @@ public class EventManager implements Listener{
                             if(kingdomChat){
                                 event.setCancelled(true);
 
-                                if(Bukkit.getPluginManager().getPlugin("AdvancedBan") != null){
+                                /*if(Bukkit.getPluginManager().getPlugin("AdvancedBan") != null){
                                     if(AdvancedBanUtil.isMuted(event.getPlayer())) {
                                         event.getPlayer().sendMessage(Feudal.getMessage("181.mute"));
                                         return;
                                     }
-                                }
+                                }*/
 
                                 final String msg = Feudal.getMessage("allyChat.kingdom").replace("%rank%", rank).replace("%name%", event.getPlayer().getDisplayName()).replace("%message%", message);//rank + " \u00a7e" + event.getPlayer().getDisplayName() + " \u00a75\u00a7l>> \u00a7b" + event.getMessage();
                                 k.messageMembers(msg, false);
@@ -181,7 +183,7 @@ public class EventManager implements Listener{
 
             if(Feudal.getEco() == 1) {
                 final User user = Feudal.getUser(event.getPlayer().getUniqueId().toString());
-                if(user == null || user.getProfession() == null || user.getProfession().getType().equals(Type.NONE)){
+                if(user == null || user.getProfession() == null || user.getProfession().getType().equals(Profession.Type.NONE)){
                     VaultUtils.removePermission(event.getPlayer(), "feudal.character.setup");
                     VaultUtils.addPermission(event.getPlayer(), "feudal.character.notsetup");
                 }else {
@@ -238,7 +240,7 @@ public class EventManager implements Listener{
 		//*/
 
 
-            us.forseth11.feudal.user.classes.Effect.use(event);
+            me.invertmc.user.classes.Effect.use(event);
             LandManagement.interact(event);
             Extra.interact(event);
             BlockValidator.onInteract(event); // check if block is valid
@@ -433,7 +435,7 @@ public class EventManager implements Listener{
     @EventHandler(priority = EventPriority.MONITOR)
     public void command2(PlayerCommandPreprocessEvent event) {
         if(!event.isCancelled()) {
-            event.setCancelled(Feudal.getPlugin().getCommands().preprocess(event.getMessage(), event.getPlayer()));
+            //event.setCancelled(Feudal.getPlugin().getCommands().preprocess(event.getMessage(), event.getPlayer()));
         }
     }
 
@@ -442,7 +444,7 @@ public class EventManager implements Listener{
         try{
             Selection.inventoryClickEvent(event);
             AttributeFixer.inventoryClickEvent(event);
-            Market1_12.inventoryClickEvent(event);
+           // Market1_12.inventoryClickEvent(event);
 
             XP.inventoryClick(event);
             TrackPlayer.inventoryClickEvent(event);
@@ -478,7 +480,7 @@ public class EventManager implements Listener{
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+  /*  @EventHandler(priority = EventPriority.HIGH)
     public void brewEvent(BrewEvent event){
         try{
             if(!event.isCancelled()){
@@ -487,7 +489,7 @@ public class EventManager implements Listener{
         }catch(final Exception e){
             ErrorManager.error(55, e);
         }
-    }
+    } */
 
     @SuppressWarnings("deprecation")
     @EventHandler
@@ -505,7 +507,7 @@ public class EventManager implements Listener{
                                 }
                             }else if(event.getBlock().getLocation().getY() == (event.getBlock().getLocation().getWorld().getSeaLevel()+1)){
                                 if(System.currentTimeMillis() % 2 == 0){
-                                    event.getBlock().setData((byte)(event.getBlock().getData()+1));
+                                    //event.getBlock().setData((byte)(event.getBlock().getData()+1));
                                 }
                             }
                         }else{
@@ -609,7 +611,7 @@ public class EventManager implements Listener{
     @EventHandler(priority = EventPriority.LOWEST)
     public void consume(PlayerItemConsumeEvent event){
         try{
-            us.forseth11.feudal.user.classes.Effect.eat(event);
+            me.invertmc.user.classes.Effect.eat(event);
             if(event.getItem() != null && event.getItem().getType() != null && event.getItem().getType().equals(Material.POTION)){
                 Luck.potionConsume(event);
             }
@@ -621,19 +623,8 @@ public class EventManager implements Listener{
     @EventHandler
     public void closeInventory(InventoryCloseEvent event){
         try{
-            if(Feudal.getVersion().equals("1.9")){
-                Market1_9.close(event);
-            }else if(Feudal.getVersion().equals("1.9.4")){
-                Market1_9_4.close(event);
-            }else if(Feudal.getVersion().equals("1.10")){
-                Market1_10.close(event);
-            }else if(Feudal.getVersion().equals("1.11")){
-                Market1_11.close(event);
-            }else if(Feudal.getVersion().equals("1.12")){
-                Market1_12.close(event);
-            }else{
-                Market1_8.close(event);
-            }
+            //Market1_12.close(event);
+
             TrackPlayer.close(event);
             ChangeProfession.close(event);
             AttributeRedistribute.closeEvent(event);

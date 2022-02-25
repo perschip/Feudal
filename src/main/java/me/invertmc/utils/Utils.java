@@ -182,12 +182,12 @@ public class Utils {
             return UtilsAbove1_7.getHiddenPotionEffect(type, duration, level);
     }
 
-    /*public static int countMatches(String shape, String string) {
+    public static int countMatches(String shape, String string) {
             return UtilsAbove1_7.countMatches(shape, string);
 
     }
 
- /*   public static boolean isShulkerBox(Material type) {
+    public static boolean isShulkerBox(Material type) {
         if(type != null && type.name().toUpperCase().endsWith("_SHULKER_BOX")) {
             return true;
         }else {
@@ -197,20 +197,20 @@ public class Utils {
 
     public static ItemStack randomItem() {
         Randomizer<ItemStack> r = new Randomizer<ItemStack>(Feudal.RANDOM);//Out of 1000
-        r.add(new ItemStack(Material.WOOD, 3), 50);
+        r.add(new ItemStack(Material.OAK_WOOD, 3), 50);
         r.add(new ItemStack(Material.STONE, 3), 50);
         r.add(new ItemStack(Material.GLASS, 3), 50);
         r.add(new ItemStack(Material.COAL, 1), 50);
         r.add(new ItemStack(Material.APPLE, 1), 50);
         r.add(new ItemStack(Material.BLAZE_ROD, 1), 50);
         r.add(new ItemStack(Material.BLAZE_POWDER, 4), 50);
-        r.add(new ItemStack(Material.NETHER_WARTS, 3), 50);
+        r.add(new ItemStack(Material.NETHER_WART, 3), 50);
         r.add(new ItemStack(Material.ARROW, 5), 50);
-        r.add(new ItemStack(Material.CARROT_ITEM, 1), 50);
+        r.add(new ItemStack(Material.CARROT, 1), 50);
         r.add(new ItemStack(Material.MELON_SEEDS, 10), 50);
         r.add(new ItemStack(Material.CAKE, 1), 50);
-        r.add(new ItemStack(Material.LOG, 2), 50);
-        r.add(new ItemStack(Material.WEB, 1), 50);
+        r.add(new ItemStack(Material.OAK_LOG, 2), 50);
+        r.add(new ItemStack(Material.COBWEB, 1), 50);
         r.add(new ItemStack(Material.CLAY_BALL, 5), 50);
         r.add(new ItemStack(Material.IRON_ORE, 1), 50);
         r.add(new ItemStack(Material.REDSTONE, 6), 50);
@@ -228,5 +228,5 @@ public class Utils {
         r.add(new ItemStack(Material.EMERALD, 1), 1);
 
         return r.randomize();
-    }*/
+    }
 }

@@ -6,12 +6,23 @@ import java.util.Random;
 import java.util.UUID;
 
 import me.invertmc.Feudal;
+import me.invertmc.api.events.LeaveKingdomEvent;
+import me.invertmc.api.events.ReputationChangeEvent;
+import me.invertmc.api.events.custom.MoneyAddEvent;
+import me.invertmc.api.events.custom.MoneyGetEvent;
+import me.invertmc.api.events.custom.MoneyRemoveEvent;
 import me.invertmc.configs.Configuration;
 import me.invertmc.kingdoms.Kingdom;
+import me.invertmc.kingdoms.KingdomLog;
+import me.invertmc.sql.UserSave;
+import me.invertmc.user.attributes.Attribute;
 import me.invertmc.user.attributes.Attributes;
+import me.invertmc.user.attributes.Effect;
 import me.invertmc.user.classes.Profession;
+import me.invertmc.user.classes.SocialClass;
 import me.invertmc.utils.ErrorManager;
 import me.invertmc.utils.OnlineTime;
+import me.invertmc.utils.VaultUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -223,9 +234,6 @@ public class User {
             if(Feudal.getEco() == 1){
                 VaultUtils.deposit(Bukkit.getOfflinePlayer(UUID.fromString(uuid)), event.getMoney());
                 syncBalance();
-            }else if(Feudal.getEco() == 2) {
-                MoltresUtil.deposit(this, event.getMoney());
-                syncBalance();
             }else{
                 change = true;
                 balance += event.getMoney();
@@ -246,9 +254,6 @@ public class User {
         if(!event.isOverrided()){
             if(Feudal.getEco() == 1){
                 VaultUtils.withdraw(Bukkit.getOfflinePlayer(UUID.fromString(uuid)), event.getMoney());
-                syncBalance();
-            }else if(Feudal.getEco() == 2) {
-                MoltresUtil.withdraw(this, event.getMoney());
                 syncBalance();
             }else{
                 change = true;
@@ -619,8 +624,6 @@ public class User {
 
         if(event.isOverrided()){
             return event.getMoney();
-        }else if(Feudal.getEco() == 2) {
-            return MoltresUtil.getBalance(this);
         }else{
             return balance;
         }
@@ -671,104 +674,104 @@ public class User {
         //FARMER, LOGGER, HUNTER, MINER, COOK, FISHER, BUILDER, SHEPERD, SCRIBE, GUARD, ASSASSIN, ALCHEMIST,
         //BLACKSMITH, HEALER, MERCHANT, SQUIRE, KNIGHT, BARON, KING
         if(this.profession != null){
-            if(!this.profession.getType().equals(Type.FARMER) && Feudal.getProfessionData().getConfig().getStringList("FARMER").contains(uuid)){
+            if(!this.profession.getType().equals(Profession.Type.FARMER) && Feudal.getProfessionData().getConfig().getStringList("FARMER").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("FARMER");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("FARMER", list);
 
-            }else if(!this.profession.getType().equals(Type.HUNTER) && Feudal.getProfessionData().getConfig().getStringList("LOGGER").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.HUNTER) && Feudal.getProfessionData().getConfig().getStringList("LOGGER").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("LOGGER");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("LOGGER", list);
 
-            }else if(!this.profession.getType().equals(Type.HUNTER) && Feudal.getProfessionData().getConfig().getStringList("HUNTER").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.HUNTER) && Feudal.getProfessionData().getConfig().getStringList("HUNTER").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("HUNTER");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("HUNTER", list);
 
-            }else if(!this.profession.getType().equals(Type.MINER) && Feudal.getProfessionData().getConfig().getStringList("MINER").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.MINER) && Feudal.getProfessionData().getConfig().getStringList("MINER").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("MINER");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("MINER", list);
 
-            }else if(!this.profession.getType().equals(Type.COOK) && Feudal.getProfessionData().getConfig().getStringList("COOK").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.COOK) && Feudal.getProfessionData().getConfig().getStringList("COOK").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("COOK");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("COOK", list);
 
-            }else if(!this.profession.getType().equals(Type.FISHER) && Feudal.getProfessionData().getConfig().getStringList("FISHER").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.FISHER) && Feudal.getProfessionData().getConfig().getStringList("FISHER").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("FISHER");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("FISHER", list);
 
-            }else if(!this.profession.getType().equals(Type.BUILDER) && Feudal.getProfessionData().getConfig().getStringList("BUILDER").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.BUILDER) && Feudal.getProfessionData().getConfig().getStringList("BUILDER").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("BUILDER");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("BUILDER", list);
 
-            }else if(!this.profession.getType().equals(Type.SHEPHERD) && Feudal.getProfessionData().getConfig().getStringList("SHEPHERD").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.SHEPHERD) && Feudal.getProfessionData().getConfig().getStringList("SHEPHERD").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("SHEPHERD");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("SHEPHERD", list);
 
-            }else if(!this.profession.getType().equals(Type.SCRIBE) && Feudal.getProfessionData().getConfig().getStringList("SCRIBE").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.SCRIBE) && Feudal.getProfessionData().getConfig().getStringList("SCRIBE").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("SCRIBE");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("SCRIBE", list);
 
-            }else if(!this.profession.getType().equals(Type.GUARD) && Feudal.getProfessionData().getConfig().getStringList("GUARD").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.GUARD) && Feudal.getProfessionData().getConfig().getStringList("GUARD").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("GUARD");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("GUARD", list);
 
-            }else if(!this.profession.getType().equals(Type.ASSASSIN) && Feudal.getProfessionData().getConfig().getStringList("ASSASSIN").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.ASSASSIN) && Feudal.getProfessionData().getConfig().getStringList("ASSASSIN").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("ASSASSIN");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("ASSASSIN", list);
 
-            }else if(!this.profession.getType().equals(Type.ALCHEMIST) && Feudal.getProfessionData().getConfig().getStringList("ALCHEMIST").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.ALCHEMIST) && Feudal.getProfessionData().getConfig().getStringList("ALCHEMIST").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("ALCHEMIST");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("ALCHEMIST", list);
 
-            }else if(!this.profession.getType().equals(Type.BLACKSMITH) && Feudal.getProfessionData().getConfig().getStringList("BLACKSMITH").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.BLACKSMITH) && Feudal.getProfessionData().getConfig().getStringList("BLACKSMITH").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("BLACKSMITH");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("BLACKSMITH", list);
 
-            }else if(!this.profession.getType().equals(Type.HEALER) && Feudal.getProfessionData().getConfig().getStringList("HEALER").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.HEALER) && Feudal.getProfessionData().getConfig().getStringList("HEALER").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("HEALER");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("HEALER", list);
 
-            }else if(!this.profession.getType().equals(Type.MERCHANT) && Feudal.getProfessionData().getConfig().getStringList("MERCHANT").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.MERCHANT) && Feudal.getProfessionData().getConfig().getStringList("MERCHANT").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("MERCHANT");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("MERCHANT", list);
 
-            }else if(!this.profession.getType().equals(Type.SQUIRE) && Feudal.getProfessionData().getConfig().getStringList("SQUIRE").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.SQUIRE) && Feudal.getProfessionData().getConfig().getStringList("SQUIRE").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("SQUIRE");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("SQUIRE", list);
 
-            }else if(!this.profession.getType().equals(Type.KNIGHT) && Feudal.getProfessionData().getConfig().getStringList("KNIGHT").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.KNIGHT) && Feudal.getProfessionData().getConfig().getStringList("KNIGHT").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("KNIGHT");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("KNIGHT", list);
 
-            }else if(!this.profession.getType().equals(Type.BARON) && Feudal.getProfessionData().getConfig().getStringList("BARON").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.BARON) && Feudal.getProfessionData().getConfig().getStringList("BARON").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("BARON");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("BARON", list);
 
-            }else if(!this.profession.getType().equals(Type.KING) && Feudal.getProfessionData().getConfig().getStringList("KING").contains(uuid)){
+            }else if(!this.profession.getType().equals(Profession.Type.KING) && Feudal.getProfessionData().getConfig().getStringList("KING").contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList("KING");
                 list.remove(uuid);
                 Feudal.getProfessionData().getConfig().set("KING", list);
 
             }
 
-            if(!this.profession.getType().equals(Type.NONE) && !Feudal.getProfessionData().getConfig().getStringList(this.profession.getType().toString()).contains(uuid)){
+            if(!this.profession.getType().equals(Profession.Type.NONE) && !Feudal.getProfessionData().getConfig().getStringList(this.profession.getType().toString()).contains(uuid)){
                 List<String> list = Feudal.getProfessionData().getConfig().getStringList(this.profession.getType().toString());
                 list.add(uuid);
                 Feudal.getProfessionData().getConfig().set(this.profession.getType().toString(), list);

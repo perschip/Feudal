@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import me.invertmc.kingdoms.Challenge;
+import me.invertmc.kingdoms.Hourly;
 import me.invertmc.market.Market;
 import me.invertmc.user.User;
 import me.invertmc.utils.ErrorManager;

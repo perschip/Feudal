@@ -9,7 +9,11 @@ import java.util.Random;
 
 import com.cryptomorin.xseries.XMaterial;
 import me.invertmc.Feudal;
+import me.invertmc.kingdoms.Kingdom;
+import me.invertmc.user.Selection;
 import me.invertmc.user.User;
+import me.invertmc.user.classes.Profession;
+import me.invertmc.user.classes.XP;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -611,9 +615,9 @@ public class Market {
             final String name = cat.getItemName();
             final byte data = (byte) cat.getItemData();
 
-            i.setItem(cat.getCategory(), cat.getIndex(), Selection.createItem(XMaterial.requestXMaterial(type, data).parseMaterial(), 1, data, name, null));
-            //i.setItem(cat.getCategory(), cat.getIndex(), Selection.createItem(XMaterial.getMaterial(cat.getItemType()), 1, (short) cat.getItemData(), cat.getItemName(), null));
-            //i.setItem(cat.getCategory(), cat.getIndex(), Selection.createItem(XMaterial.requestXMaterial(XMaterial.getMaterial(cat.getItemType()), 1, (short) cat.getItemData(), cat.getItemName(), null), size, inventoryType, null, null));
+            //i.setItem(cat.getCategory(), cat.getIndex(), Selection.createItem(XMaterial.matchXMaterial(type, data).parseMaterial(), 1, data, name, null));
+            i.setItem(cat.getCategory(), cat.getIndex(), Selection.createItem(Material.getMaterial(cat.getItemType()), 1, (short) cat.getItemData(), cat.getItemName(), null));
+            //i.setItem(cat.getCategory(), cat.getIndex(), Selection.createItem(Material.requestMaterial(XMaterial.getMaterial(cat.getItemType()), 1, (short) cat.getItemData(), cat.getItemName(), null), size, inventoryType, null, null));
         }
         return i;
     }

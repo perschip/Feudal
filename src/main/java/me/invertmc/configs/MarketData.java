@@ -1,6 +1,7 @@
 package me.invertmc.configs;
 
 import me.invertmc.Feudal;
+import me.invertmc.market.MarketItem;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;

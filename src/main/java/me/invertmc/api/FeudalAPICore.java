@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import me.invertmc.Feudal;
+import me.invertmc.kingdoms.Challenge;
 import me.invertmc.kingdoms.Kingdom;
 import me.invertmc.kingdoms.Land;
 import me.invertmc.user.User;
@@ -121,7 +122,7 @@ public class FeudalAPICore implements FeudalAPI {
         return null;
     }
 
-    @Override
+    /*@Override
     public void addCommand(Command feudalCommand) {
         if(feudalCommand instanceof CustomCommand){
             Feudal.getPlugin().getCommands().getCommands().add(((CustomCommand) feudalCommand).getHelpIndex(), feudalCommand);
@@ -138,7 +139,7 @@ public class FeudalAPICore implements FeudalAPI {
     @Override
     public List<Command> getCommands() {
         return Feudal.getPlugin().getCommands().getCommands();
-    }
+    }*/
 
     @Override
     public String getMinecraftVersion() {

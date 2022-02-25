@@ -7,6 +7,20 @@ import java.util.List;
 import java.util.Random;
 
 import me.invertmc.Feudal;
+import me.invertmc.ScheduledTasks;
+import me.invertmc.api.events.NewUserEvent;
+import me.invertmc.kingdoms.ChallengeManager;
+import me.invertmc.kingdoms.Kingdom;
+import me.invertmc.kingdoms.KingdomLog;
+import me.invertmc.user.AttributeFixer;
+import me.invertmc.user.Selection;
+import me.invertmc.user.User;
+import me.invertmc.user.attributes.Attribute;
+import me.invertmc.user.attributes.Attributes;
+import me.invertmc.user.classes.Profession;
+import me.invertmc.user.classes.SocialClass;
+import me.invertmc.utils.Base64;
+import me.invertmc.utils.ErrorManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -24,7 +38,7 @@ public class UserSave {
 	/*
 	 * Saves a user via MySQL
 	 */
-	/*public static void save(final User user, boolean async) {
+	public static void save(final User user, boolean async) {
 		SQLControl sql = Feudal.getPlugin().getSql();
 		
 		String world = "world";
@@ -197,7 +211,7 @@ public class UserSave {
 	/*
 	 * Loads a user via MySQL
 	 */
-	/*public static void load(User user) {
+	public static void load(User user) {
 		SQLControl sql = Feudal.getPlugin().getSql();
 		
 		//if not exit, loadPlayer()
@@ -310,7 +324,7 @@ public class UserSave {
 	/*
 	 * Setup defaults in sql
 	 */
-	/*public static void setDefaults(Player player) {
+	public static void setDefaults(Player player) {
 		boolean autoSetup = (Feudal.getConfiguration().getConfig().getBoolean("setup.default.enable"));
 		String currentProfession = "NONE/0/0";
 		if(autoSetup) {
@@ -410,7 +424,7 @@ public class UserSave {
 	/*
 	 * Loads player. Creates new one if they do not exist.
 	 */
-	/*public static void loadPlayer(Player player) {
+	public static void loadPlayer(Player player) {
 		SQLControl sql = Feudal.getPlugin().getSql();
 		try {
 			if(sql.getUsersSQL().contains("uuid", player.getUniqueId().toString())) {
@@ -505,7 +519,7 @@ public class UserSave {
 	/*
 	 * Returns user
 	 */
-	/*public static User getUser(String uuid) {
+	public static User getUser(String uuid) {
 		try {
 			if (Feudal.getPlugin().getSql().getUsersSQL().contains("uuid", uuid)) {
 				return new User(uuid, null);
@@ -522,5 +536,4 @@ public class UserSave {
 		SQLControl sql = Feudal.getPlugin().getSql();
 		sql.getUsersSQL().remove("uuid", uuid);
 	}
-*/
 }

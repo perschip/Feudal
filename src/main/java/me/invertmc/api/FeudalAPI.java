@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import me.invertmc.Feudal;
+import me.invertmc.kingdoms.Challenge;
 import me.invertmc.kingdoms.Kingdom;
 import me.invertmc.kingdoms.Land;
 import me.invertmc.user.User;
@@ -129,21 +130,21 @@ public interface FeudalAPI {
      *
      * @param feudalCommand Feudal @Command
      */
-    public void addCommand(Command feudalCommand);
+    //public void addCommand(Command feudalCommand);
 
     /**
      * Remove a Feudal sub-command by using the instance of that Feudal @Command
      * @param feudalCommand Feudal @Command
      * @return true if command was remove, false if not in the command list
      */
-    public boolean removeCommand(Command feudalCommand);
+   // public boolean removeCommand(Command feudalCommand);
 
     /**
      * Get a list of Feudal @Command which are being used.
      *
      * @return List of @Command
      */
-    public List<Command> getCommands();
+    //public List<Command> getCommands();
 
     /**
      * Get the version of minecraft Feudal has loaded for.
