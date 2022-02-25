@@ -7,6 +7,7 @@ import me.invertmc.Feudal;
 import me.invertmc.kingdoms.Kingdom;
 import me.invertmc.kingdoms.Rank;
 import me.invertmc.user.User;
+import me.invertmc.user.classes.Profession;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -169,31 +170,19 @@ public class Utils {
         return players;
     }
 
-   /* public static double getHealth(LivingEntity entity) {
-        if(Feudal.getVersion().equals("1.7")) {
-            return Utils1_7.getHealth(entity);
-        }else {
+    public static double getHealth(LivingEntity entity) {
             return UtilsAbove1_7.getHealth(entity);
-        }
     }
 
     public static double getMaxHealth(LivingEntity entity) {
-        if(Feudal.getVersion().equals("1.7")) {
-            return Utils1_7.getMaxHealth(entity);
-        }else {
             return UtilsAbove1_7.getMaxHealth(entity);
-        }
     }
 
-    public static PotionEffect getHiddenPotionEffect(PotionEffectType type, int duration, int level) {
-        if(Feudal.getVersion().equals("1.7")) {
-            return Utils1_7.getHiddenPotionEffect(type, duration, level);
-        }else {
+   public static PotionEffect getHiddenPotionEffect(PotionEffectType type, int duration, int level) {
             return UtilsAbove1_7.getHiddenPotionEffect(type, duration, level);
-        }
-    }*/
+    }
 
-    public static int countMatches(String shape, String string) {
+    /*public static int countMatches(String shape, String string) {
             return UtilsAbove1_7.countMatches(shape, string);
 
     }

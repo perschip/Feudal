@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
+import com.cryptomorin.xseries.XMaterial;
 import me.invertmc.Feudal;
 import me.invertmc.user.User;
 import org.bukkit.Bukkit;
@@ -17,6 +18,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import me.invertmc.utils.InventoryGui;
 
 public class Market {
     protected InventoryGui inventory;

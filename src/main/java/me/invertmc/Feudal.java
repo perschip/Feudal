@@ -11,14 +11,22 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import com.cryptomorin.xseries.XMaterial;
 import me.invertmc.api.FeudalAPI;
+import me.invertmc.api.FeudalAPICore;
 import me.invertmc.configs.Configs;
 import me.invertmc.configs.Configuration;
 import me.invertmc.kingdoms.Kingdom;
 import me.invertmc.kingdoms.Land;
+import me.invertmc.kingdoms.Rank;
+import me.invertmc.market.CheckForMarketErrors;
+import me.invertmc.market.ItemProtector;
 import me.invertmc.sql.SQLControl;
+import me.invertmc.user.Selection;
 import me.invertmc.user.User;
 import me.invertmc.utils.ErrorManager;
+import me.invertmc.utils.VaultUtils;
+import me.invertmc.utils.WGUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -64,10 +72,10 @@ public class Feudal extends JavaPlugin {
 	private static ArrayList<MarketItem> marketItems = new ArrayList<>();
 	private static ArrayList<Category> categories = new ArrayList<>();
 	private static ArrayList<TrackPlayer> trackPlayers = new ArrayList<>();
-	private static ArrayList<Kingdom> kingdoms = new ArrayList<>();
+	private static ArrayList<Kingdom> kingdoms = new ArrayList<>();*/
 	private static int eco = 0;//0 none ; 1 vault ; 2 moltres
-	private static String minecraftVersion = "1.13";
-	private static Commands commands;*/
+	private static String minecraftVersion = "1.18";
+	//private static Commands commands;
 
 	private static volatile List<String> saving = Collections.synchronizedList(new ArrayList<String>());
 
@@ -79,6 +87,7 @@ public class Feudal extends JavaPlugin {
 
 	public void onEnable() {
 		plugin = this;
+		minecraftVersion = Bukkit.getVersion();
 
 		this.getLogger().info(ChatColor.GREEN + "=======================");
 		this.getLogger().info(ChatColor.GREEN + "Feudal Has Been Enabled!");
@@ -91,9 +100,204 @@ public class Feudal extends JavaPlugin {
 				Feudal.log("Feudal configs have been successfully loaded!");
 			}
 		} catch (Exception e) {
+			Feudal.error("There was a problem while loading the Feudal configs.");
 			e.printStackTrace();
 		}
 
+		ErrorManager.load();
+
+		if (Bukkit.getServer().getPluginManager().getPlugin("Vault") != null) {
+			if (!Bukkit.getServer().getPluginManager().isPluginEnabled("Vault")) {
+				Bukkit.getPluginManager().enablePlugin(
+						Bukkit.getPluginManager().getPlugin("Vault"));
+			}
+			VaultUtils.setupEconomy();
+			eco = 1;
+		}
+
+		if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+			if (!Bukkit.getServer().getPluginManager()
+					.isPluginEnabled("WorldGuard")) {
+				Bukkit.getPluginManager().enablePlugin(
+						Bukkit.getPluginManager().getPlugin("WorldGuard"));
+			}
+			WGUtils.setupWG();
+		}
+
+		try {
+			final PluginManager m = this.getServer().getPluginManager();
+			m.registerEvents(new EventManager(), this);
+			/*if(!getVersion().contains("1.7") && !getVersion().contains("1.8")) {
+				m.registerEvents(new EventManager1_8Plus(), this);
+			}*/
+
+			// register commands
+			commands = new Commands();
+			getCommand("feudal").setExecutor(commands);
+
+			// Load all kingdoms
+			if(getSql().doesUse()) {
+				KingdomSave.loadKingdoms();
+			}else {
+				for (final File kingdomFile : kingdomsFolder.listFiles()) {
+					final Configuration config = new Configuration(kingdomFile);
+					try {
+						config.loadConfig();
+					} catch (final Exception e) {
+						try {
+							config.broke();
+						} catch (final Exception e1) {
+							ErrorManager.error(6, e);
+							System.out
+									.println("[Feudal] FAILED TO SAVE DATA FOR BROKEN FILE: "
+											+ kingdomFile.getName());
+						}
+						ErrorManager.error(25, e);
+						continue;
+					}
+					Kingdom king = null;
+					try {
+						king = new Kingdom(config);
+					} catch (final Exception e) {
+						ErrorManager.error(7, e);
+						System.out
+								.println("[Feudal] Failed to load kingdom from config: "
+										+ kingdomFile.getName());
+						continue;
+					}
+
+					// Does not load kingdom if the leader is missing. Sorry..
+					boolean leader = false;
+					for (final String s : king.getMembers().keySet()) {
+						if (king.getMembers().get(s).equals(Rank.LEADER)) {
+							leader = true;
+						}
+					}
+					if (leader) {
+						kingdoms.add(king);
+						king.updateLand();
+					}
+					//
+				}
+			}
+			//
+
+			// Load challenges
+			for (final String challengeStr : Feudal.getChallengesConfig().getConfig()
+					.getStringList("challenges")) {
+				Challenge c = null;
+				try {
+					c = new Challenge(challengeStr);
+				} catch (final Exception e) {
+					ErrorManager.error(8, e);
+					continue;
+				}
+				if (c.getAttacker() != null && c.getDefender() != null) {
+					challenges.add(c);
+				}
+			}
+			//
+
+			for (final Player p : Bukkit.getOnlinePlayers()) {
+				Feudal.loadPlayer(p);
+			}
+
+			Effect.saturationRegain();
+
+			ScheduledTasks.startScheduler();
+
+			try {
+				final Metrics metrics = new Metrics(this);
+				metrics.start();
+			} catch (final IOException e) {
+				ErrorManager.error(9, e);
+			}
+
+			InventoryGui2.enable(this);
+
+
+			/*
+			if (Feudal.getConfiguration().getConfig().getBoolean("Healer.canCraftGodApple")) {
+				final NamespacedKey key = new NamespacedKey(this.plugin, "godApple");
+				final ShapedRecipe godApple = new ShapedRecipe(key, new ItemStack(Material.GOLDEN_APPLE, 1, (short) 1));
+			}
+
+		    public void createRecipePouch() {
+		        ItemStack item = recipeItems("pouch");
+		        NamespacedKey key = new NamespacedKey(this.plugin, "pouch");
+		        ShapedRecipe craftItem = new ShapedRecipe(key, item);
+		        craftItem.shape(this.plugin.getConfig().getString("Recipes.Pouch.Line1"),this.plugin.getConfig().getString("Recipes.Pouch.Line2"),this.plugin.getConfig().getString("Recipes.Pouch.Line3"));
+
+		        int Count = 0;
+		        while (plugin.getConfig().getString("Recipes.Pouch.Ingredients." + Count) != null) {
+		          Count++;
+		        }
+		        Count--;
+		        while (Count > -1) {
+		            craftItem.setIngredient(this.plugin.getConfig().getString("Recipes.Pouch.Ingredients." + Count + ".Key").charAt(0), Material.matchMaterial(this.plugin.getConfig().getString("Recipes.Pouch.Ingredients." + Count + ".Material")));
+		            Count--;
+		        }
+
+		        this.plugin.getServer().addRecipe(craftItem);
+		    } */
+			// Make a recipe for the op gold apple (This is restricted to be
+			// crafted by healers only) (Configurable)
+			if (Feudal.getConfiguration().getConfig()
+					.getBoolean("Healer.canCraftGodApple")) {
+				final ShapedRecipe godApple = new ShapedRecipe(new ItemStack(
+						XMaterial.GOLDEN_APPLE.parseMaterial(), 1, (short) 1));
+				godApple.shape("***", "*%*", "***");
+				godApple.setIngredient('*', XMaterial.GOLD_BLOCK.parseMaterial());
+				godApple.setIngredient('%', XMaterial.APPLE.parseMaterial());
+				Bukkit.addRecipe(godApple);
+			}
+			//
+
+			new CheckForMarketErrors();
+
+			if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+				new FeudalPlaceholder(this).hook();
+				Feudal.log("Placeholders loaded for PlaceholderAPI");
+			}
+
+		} catch (final Exception e) {
+			ErrorManager.error(4, e);
+		}
+
+		String commandOri = null;
+		String[] aliases = null;
+		for(final String s : Bukkit.getCommandAliases().keySet()) {
+			if(s.equalsIgnoreCase("feudal")) {
+				aliases = Bukkit.getCommandAliases().get(s);
+				commandOri = s;
+			}
+		}
+		String[] newAliases = null;
+		final List<String> customCommands = Feudal.getConfiguration().getConfig().getStringList("customCommands");
+		try {
+			if(aliases != null) {
+				newAliases = new String[aliases.length+customCommands.size()];
+				for(int i = 0; i < aliases.length; i++) {
+					newAliases[i] = aliases[i];
+				}
+				for(int i = aliases.length; i < newAliases.length; i++) {
+					newAliases[i] = customCommands.remove(0);
+				}
+			}else {
+				newAliases = customCommands.toArray(new String[customCommands.size()]);
+			}
+		}catch(final Exception e) {
+			ErrorManager.error(1413222018, e);
+		}
+		if(commandOri != null && newAliases != null) {
+			Bukkit.getCommandAliases().put(commandOri, newAliases);
+		}
+
+		ItemProtector.start();
+		ScheduledTasks.startKingdomSaveTimer();
+
+		api = new FeudalAPICore();
+		Updates.checkUpdates(this, "Feudal", "22873");
 	}
 
 	public void onDisable() {
@@ -101,6 +305,33 @@ public class Feudal extends JavaPlugin {
 		this.getLogger().info(ChatColor.RED + "Feudal Has Been Disabled!");
 		this.getLogger().info(ChatColor.RED + "Verison: " + this.pdf.getVersion());
 		this.getLogger().info(ChatColor.RED + "=======================");
+
+		try {
+			for (final Block b : Land.getMarks()) {
+				b.setType(Material.AIR);
+			}
+
+			for (final Selection sel : selections) {
+				sel.getPlayer().closeInventory();
+			}
+				for (final Market1_12 mar : markets1_12) {
+					mar.getPlayer().closeInventory();
+				}
+
+			for (final Player p : Bukkit.getOnlinePlayers()) {
+				p.closeInventory();
+			}
+			saveUsers(false);
+			saveKingdoms(false);
+			saveChallenges();
+			saveMarketItems();
+
+			InventoryGui2.disable();
+
+			onlinePlayers.clear();
+		} catch (final Exception e) {
+			ErrorManager.error(5, e);
+		}
 	}
 
 
